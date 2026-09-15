@@ -69,11 +69,11 @@ Board Board::moved(Move move) const {
 	return Board(size_, std::move(next_tiles));
 }
 
-std::vector<Board> Board::neighbors() const {
-	std::vector<Board> result;
+std::vector<Neighbor> Board::neighbors() const {
+	std::vector<Neighbor> result;
 	for (const auto move : {Move::Up, Move::Down, Move::Left, Move::Right}) {
 		try {
-			result.push_back(moved(move));
+			result.push_back({move, moved(move)});
 		} catch (const std::invalid_argument&) {
 			// Boundary moves are not neighbors.
 		}

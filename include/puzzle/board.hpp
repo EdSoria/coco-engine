@@ -8,6 +8,8 @@
 
 namespace puzzle {
 
+struct Neighbor;
+
 class Board {
 public:
     Board(int size, std::vector<int> tiles);
@@ -18,7 +20,7 @@ public:
 
     std::size_t blank_index() const;
     Board moved(Move move) const;
-    std::vector<Board> neighbors() const;
+    std::vector<Neighbor> neighbors() const;
 
     std::string key() const;
     bool operator==(const Board& other) const noexcept;
@@ -27,6 +29,11 @@ public:
 private:
     int size_;
     std::vector<int> tiles_;
+};
+
+struct Neighbor {
+    Move move;
+    Board board;
 };
 
 }  // namespace puzzle
