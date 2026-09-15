@@ -7,6 +7,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_library(puzzle_engine
     src/board.cpp
+    src/move.cpp
     src/goals.cpp
     src/solver.cpp
 )
