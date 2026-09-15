@@ -112,7 +112,7 @@ coco-engine/
     └── API.md            # full API contract
 ```
 
-## Roadmap / Future work
+## Roadmap
 
 - [ ] Support for larger boards (5x5+) with additional optimizations (IDA*, walking distance).
 - [ ] Docker deployment on Render/Fly.io.
