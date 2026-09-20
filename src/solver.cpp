@@ -1,9 +1,9 @@
 #include "puzzle/solver.hpp"
+#include "puzzle/metrics.hpp"
 #include "puzzle/solvability.hpp"
 
 #include <algorithm>
 #include <chrono>
-#include <cstdlib>
 #include <limits>
 #include <queue>
 #include <unordered_map>
@@ -45,33 +45,6 @@ using OpenQueue = std::priority_queue<
 	std::vector<QueueItem>,
 	QueueItemCompare
 >;
-
-int manhattan_distance(const Board& board, const Board& goal) {
-	std::vector<std::size_t> goal_positions(goal.tiles().size());
-	for (std::size_t index = 0; index < goal.tiles().size(); ++index) {
-		goal_positions[static_cast<std::size_t>(goal.tiles()[index])] = index;
-	}
-
-	int distance = 0;
-	for (std::size_t index = 0; index < board.tiles().size(); ++index) {
-		const int tile = board.tiles()[index];
-		if (tile == 0) {
-			continue;
-		}
-
-		const std::size_t goal_index = goal_positions[static_cast<std::size_t>(tile)];
-		distance += std::abs(
-			static_cast<int>(index / static_cast<std::size_t>(board.size())) -
-			static_cast<int>(goal_index / static_cast<std::size_t>(board.size()))
-		);
-		distance += std::abs(
-			static_cast<int>(index % static_cast<std::size_t>(board.size())) -
-			static_cast<int>(goal_index % static_cast<std::size_t>(board.size()))
-		);
-	}
-
-	return distance;
-}
 
 void reconstruct_path(
 	const std::vector<Node>& nodes,
@@ -124,11 +97,12 @@ SolveResult solve(const Board& initial, const Board& goal, std::size_t max_nodes
 	std::vector<Node> nodes;
 	OpenQueue open;
 	std::unordered_map<std::string, int> best_cost;
+	const Positions goal_positions = get_positions(goal);
 
 	nodes.push_back({
 		initial,
 		0,
-		manhattan_distance(initial, goal),
+		manhattan_distance(initial, goal_positions),
 		no_parent,
 		Move::Up
 	});
@@ -166,7 +140,7 @@ SolveResult solve(const Board& initial, const Board& goal, std::size_t max_nodes
 			nodes.push_back({
 				neighbor.board,
 				next_cost,
-				manhattan_distance(neighbor.board, goal),
+				manhattan_distance(neighbor.board, goal_positions),
 				item.node_id,
 				neighbor.move
 			});
