@@ -31,7 +31,9 @@ add_library(puzzle_engine
     src/board.cpp
     src/move.cpp
     src/goals.cpp
+    src/metrics.cpp
     src/solvability.cpp
+    src/random_board.cpp
     src/solver.cpp
 )
 target_include_directories(puzzle_engine PUBLIC include)
