@@ -158,6 +158,7 @@ SolveResult solve(const Board& initial, const Board& goal, std::size_t max_nodes
 	result.status = SolveStatus::Solved;
 	result.solvable = true;
 	reconstruct_path(nodes, goal_id, result.moves, result.states);
+	result.stats.path_length = result.moves.size();
 	return finish();
 }
 

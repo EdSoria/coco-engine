@@ -16,6 +16,7 @@ enum class SolveStatus {
 struct SolveStats {
     std::size_t nodes_expanded = 0;
     double elapsed_ms = 0.0;
+    std::size_t path_length = 0;
 };
 
 struct SolveResult {
