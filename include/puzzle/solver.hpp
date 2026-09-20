@@ -21,7 +21,6 @@ struct SolveStats {
 
 struct SolveResult {
     SolveStatus status = SolveStatus::Unsolvable;
-    bool solvable = false;
     std::vector<Move> moves;
     std::vector<Board> states;
     SolveStats stats;

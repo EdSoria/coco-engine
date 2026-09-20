@@ -64,7 +64,6 @@ TEST_CASE("solver reports an already solved board") {
     const puzzle::SolveResult result = puzzle::solve(goal, goal);
 
     REQUIRE(result.status == puzzle::SolveStatus::Solved);
-    REQUIRE(result.solvable);
     REQUIRE(result.moves.empty());
     REQUIRE(result.states == std::vector<puzzle::Board>{goal});
     REQUIRE(result.stats.nodes_expanded == 0);
@@ -76,7 +75,6 @@ TEST_CASE("solver returns the optimal one-move solution") {
     const puzzle::SolveResult result = puzzle::solve(initial, goal);
 
     REQUIRE(result.status == puzzle::SolveStatus::Solved);
-    REQUIRE(result.solvable);
     REQUIRE(result.moves == std::vector<puzzle::Move>{puzzle::Move::Right});
     REQUIRE(result.states.size() == result.moves.size() + 1);
     REQUIRE(result.states.front() == initial);
@@ -90,7 +88,6 @@ TEST_CASE("solver reports an unsolvable board without searching") {
     const puzzle::SolveResult result = puzzle::solve(initial, goal);
 
     REQUIRE(result.status == puzzle::SolveStatus::Unsolvable);
-    REQUIRE_FALSE(result.solvable);
     REQUIRE(result.moves.empty());
     REQUIRE(result.states.empty());
     REQUIRE(result.stats.nodes_expanded == 0);
@@ -102,7 +99,6 @@ TEST_CASE("solver reports the node limit before finding a solution") {
     const puzzle::SolveResult result = puzzle::solve(initial, goal, 0);
 
     REQUIRE(result.status == puzzle::SolveStatus::NodeLimitReached);
-    REQUIRE_FALSE(result.solvable);
     REQUIRE(result.moves.empty());
     REQUIRE(result.states.empty());
 }
@@ -113,7 +109,6 @@ TEST_CASE("solver supports a custom goal") {
     const puzzle::SolveResult result = puzzle::solve(initial, goal);
 
     REQUIRE(result.status == puzzle::SolveStatus::Solved);
-    REQUIRE(result.solvable);
     REQUIRE(result.moves == std::vector<puzzle::Move>{puzzle::Move::Left});
     REQUIRE(result.states.back() == goal);
 }
