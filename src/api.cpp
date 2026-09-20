@@ -1,7 +1,11 @@
-// TODO: add the REST routes. This is the only layer that should include cpp-httplib.
+#include "puzzle/api.hpp"
+
+#include <httplib.h>
 
 namespace puzzle {
 
-// TODO: translate JSON requests to engine data structures and responses.
+void register_routes(httplib::Server& server) {
+	(void)server;
+}
 
 }  // namespace puzzle
