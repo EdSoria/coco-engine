@@ -7,12 +7,19 @@
 
 namespace puzzle {
 
+enum class SolveStatus {
+    Solved,
+    Unsolvable,
+    NodeLimitReached
+};
+
 struct SolveStats {
     std::size_t nodes_expanded = 0;
     double elapsed_ms = 0.0;
 };
 
 struct SolveResult {
+    SolveStatus status = SolveStatus::Unsolvable;
     bool solvable = false;
     std::vector<Move> moves;
     std::vector<Board> states;

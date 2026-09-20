@@ -110,10 +110,12 @@ SolveResult solve(const Board& initial, const Board& goal, std::size_t max_nodes
 	};
 
 	if (!is_solvable(initial, goal)) {
+		result.status = SolveStatus::Unsolvable;
 		return finish();
 	}
 
 	if (initial == goal) {
+		result.status = SolveStatus::Solved;
 		result.solvable = true;
 		result.states.push_back(initial);
 		return finish();
@@ -175,9 +177,11 @@ SolveResult solve(const Board& initial, const Board& goal, std::size_t max_nodes
 	}
 
 	if (goal_id == no_parent) {
+		result.status = SolveStatus::NodeLimitReached;
 		return finish();
 	}
 
+	result.status = SolveStatus::Solved;
 	result.solvable = true;
 	reconstruct_path(nodes, goal_id, result.moves, result.states);
 	return finish();
