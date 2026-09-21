@@ -2,12 +2,6 @@
 
 Engine and REST API for an N-Puzzle (8-puzzle generalized to an NxN board) written in C++. Generates solvable random boards, supports predefined or custom goal states, and solves the puzzle using A*, returning both the move sequence and intermediate states.
 
-## Demo
-
-[Live demo link]
-
-![demo](docs/demo.gif)
-
 ## Features
 
 - Random initial board generation, guaranteed solvable.
@@ -112,27 +106,20 @@ Before attempting to solve, the (initial, goal) pair is validated for solvabilit
 
 ```
 coco-engine/
-├── CMakeLists.txt        # build configuration
+├── CMakeLists.txt        # build configuration and dependencies
 ├── README.md
-├── .gitignore
 ├── Dockerfile            # build and runtime image
-├── include/puzzle/       # headers 
-│   ├── board.hpp
-│   ├── solver.hpp
-│   └── goals.hpp
-├── src/                  # implementation
-│   ├── board.cpp
-│   ├── solver.cpp
-│   ├── goals.cpp
-│   ├── api.cpp           # HTTP routes, the only layer aware of cpp-httplib
-│   └── main.cpp          # server bootstrap
-├── tests/                # unit tests (Catch2)
+├── .dockerignore
+├── .vscode/              # IntelliSense configuration
+├── include/puzzle/       # public engine headers
+├── src/                  # engine, REST routes and server bootstrap
+├── tests/                # engine and HTTP tests
+├── docs/API.md           # public API contract
 ├── third_party/          # auxiliary repository notes
-└── docs/
-    └── API.md            # full API contract
+└── TODO.md               # visible project backlog
 ```
 
 ## Roadmap
 
-- [ ] Support for larger boards (5x5+) with additional optimizations (IDA*, walking distance).
+- [ ] Support for larger boards (6x6+) with additional optimizations (IDA*, walking distance).
 - [ ] Deploy the Docker image on Render/Fly.io.
