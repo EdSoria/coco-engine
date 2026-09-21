@@ -40,19 +40,23 @@ The engine has no HTTP dependency at all, it only works with in-memory data stru
 - C++17-compatible compiler (GCC 9+, Clang 10+)
 - CMake 3.15+
 - Git
+- Ninja (recommended) or another CMake-supported generator
 
 ## Installation and running
 
 ```bash
 git clone https://github.com/edsoria/coco-engine.git
 cd coco-engine
-mkdir build && cd build
-cmake ..
-make
-./puzzle_server
+cmake -S . -B build -G Ninja -DBUILD_TESTING=ON
+cmake --build build
+./build/puzzle_server
 ```
 
 The server listens on `http://localhost:8080`.
+
+On Windows, run `build\puzzle_server.exe` after building. The server binds to
+`0.0.0.0:8080`, so it can receive requests from another device on the network
+if the firewall allows the port.
 
 ### Docker
 
@@ -74,7 +78,13 @@ The server is available at `http://localhost:8080`.
 | `/api/puzzle/validate` | POST | Checks whether an initial/goal pair is solvable together |
 | `/api/puzzle/solve` | POST | Solves with A* and returns moves + intermediate states |
 
-Full contract, including request/response examples and error handling: [docs/API.md](docs/API.md).
+The complete public contract, request/response examples and JavaScript usage
+are in [docs/API.md](docs/API.md).
+
+The API accepts JSON requests and returns JSON responses. A browser frontend
+running on another port may need a development proxy or CORS support. The
+simplest local setup is to run both applications on the same computer and
+configure the frontend to use `http://localhost:8080`.
 
 ## Tests
 
@@ -86,10 +96,11 @@ ctest
 or run the test binary directly:
 
 ```bash
-./tests/puzzle_tests
+./puzzle_tests
 ```
 
-Current coverage: board generation, solvability validation, base solver cases (already-solved puzzle, unsolvable puzzle, different board sizes).
+The suite covers engine behavior and HTTP routes. On Windows, run
+`build\puzzle_tests.exe` instead.
 
 ## Algorithm
 
@@ -104,7 +115,7 @@ coco-engine/
 ├── CMakeLists.txt        # build configuration
 ├── README.md
 ├── .gitignore
-├── Dockerfile            # for deployment 
+├── Dockerfile            # build and runtime image
 ├── include/puzzle/       # headers 
 │   ├── board.hpp
 │   ├── solver.hpp
@@ -116,7 +127,7 @@ coco-engine/
 │   ├── api.cpp           # HTTP routes, the only layer aware of cpp-httplib
 │   └── main.cpp          # server bootstrap
 ├── tests/                # unit tests (Catch2)
-├── third_party/          # header-only libraries (httplib, json, catch2)
+├── third_party/          # auxiliary repository notes
 └── docs/
     └── API.md            # full API contract
 ```
@@ -124,4 +135,4 @@ coco-engine/
 ## Roadmap
 
 - [ ] Support for larger boards (5x5+) with additional optimizations (IDA*, walking distance).
-- [ ] Docker deployment on Render/Fly.io.
+- [ ] Deploy the Docker image on Render/Fly.io.

@@ -10,7 +10,7 @@
 - [x] Implementar `POST /api/puzzle/solve`.
 - [x] Añadir pruebas HTTP automatizadas para todas las rutas y errores.
 - [x] Completar el `Dockerfile` para compilar y ejecutar el servidor.
-- [ ] Alinear `README.md`, `docs/API.md` y `contrato.md` con el comportamiento real.
+- [x] Alinear `README.md` y `docs/API.md` con el comportamiento real; `contrato.md` es documentación personal.
 
 ## Robustez y rendimiento
 
