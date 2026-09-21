@@ -1,0 +1,11 @@
+build/
+build-*/
+.git/
+.vscode/
+third_party/
+Dockerfile
+README.md
+TODO.md
+contrato.md
+docs/
+tests/

@@ -54,6 +54,15 @@ make
 
 The server listens on `http://localhost:8080`.
 
+### Docker
+
+```bash
+docker build -t coco-engine .
+docker run --rm -p 8080:8080 coco-engine
+```
+
+The server is available at `http://localhost:8080`.
+
 ## API documentation
 
 | Endpoint | Method | Description |
