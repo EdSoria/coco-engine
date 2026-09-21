@@ -49,6 +49,9 @@ add_executable(puzzle_server
 )
 target_link_libraries(puzzle_server PRIVATE puzzle_engine httplib::httplib nlohmann_json::nlohmann_json)
 
+add_executable(puzzle_cli src/cli.cpp)
+target_link_libraries(puzzle_cli PRIVATE puzzle_engine)
+
 include(CTest)
 if(BUILD_TESTING)
     add_executable(puzzle_tests

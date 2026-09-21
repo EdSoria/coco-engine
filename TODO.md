@@ -9,6 +9,7 @@
 - [x] Implementar `POST /api/puzzle/validate`.
 - [x] Implementar `POST /api/puzzle/solve`.
 - [x] Añadir pruebas HTTP automatizadas para todas las rutas y errores.
+- [x] Añadir una herramienta de consola para probar el solver directamente.
 - [x] Completar el `Dockerfile` para compilar y ejecutar el servidor.
 - [x] Alinear `README.md` y `docs/API.md` con el comportamiento real; `contrato.md` es documentación personal.
 

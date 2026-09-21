@@ -96,6 +96,29 @@ or run the test binary directly:
 The suite covers engine behavior and HTTP routes. On Windows, run
 `build\puzzle_tests.exe` instead.
 
+### Direct algorithm test
+
+To try the solver from the console without starting the HTTP server, build and
+run `puzzle_cli`:
+
+```bash
+cmake --build build --target puzzle_cli
+./build/puzzle_cli
+```
+
+On Windows, run `build\puzzle_cli.exe`. Enter the board size, the initial board
+and the goal board as space-separated numbers. For example, a one-move 3x3
+test uses:
+
+```text
+3
+1 2 3 4 5 6 7 0 8
+1 2 3 4 5 6 7 8 0
+```
+
+The program prints the status, moves, expanded nodes, elapsed time and every
+state in the solution path.
+
 ## Algorithm
 
 Solving is done with **A\*** using the **Manhattan distance** heuristic (sum of each tile's distance from its target position), which is admissible and guarantees the optimal solution (minimum number of moves).
