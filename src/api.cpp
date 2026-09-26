@@ -22,6 +22,33 @@ using Json = nlohmann::json;
 constexpr int minimum_size = 2;
 constexpr int maximum_size = 5;
 
+bool is_allowed_origin(const std::string& origin) {
+	return origin == "http://localhost" ||
+		origin.rfind("http://localhost:", 0) == 0 ||
+		origin == "http://127.0.0.1" ||
+		origin.rfind("http://127.0.0.1:", 0) == 0;
+}
+
+void set_cors_headers(
+	const httplib::Request& request,
+	httplib::Response& response
+) {
+	if (!request.has_header("Origin")) {
+		return;
+	}
+
+	const std::string origin = request.get_header_value("Origin");
+	if (!is_allowed_origin(origin)) {
+		return;
+	}
+
+	response.set_header("Access-Control-Allow-Origin", origin);
+	response.set_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+	response.set_header("Access-Control-Allow-Headers", "Content-Type");
+	response.set_header("Access-Control-Max-Age", "600");
+	response.set_header("Vary", "Origin");
+}
+
 void set_json_response(
 	httplib::Response& response,
 	const Json& body,
@@ -131,6 +158,16 @@ Json goal_types_to_json() {
 }  // namespace
 
 void register_routes(httplib::Server& server) {
+	server.set_post_routing_handler(
+		[](const httplib::Request& request, httplib::Response& response) {
+			set_cors_headers(request, response);
+		}
+	);
+
+	server.Options("/api/puzzle/(.*)", [](const httplib::Request&, httplib::Response& response) {
+		response.status = 204;
+	});
+
 	server.Get("/api/puzzle/goal-types", [](const httplib::Request&, httplib::Response& response) {
 		set_json_response(response, goal_types_to_json());
 	});

@@ -270,3 +270,47 @@ TEST_CASE("HTTP endpoints reject invalid input consistently") {
     REQUIRE(invalid_move->status == 400);
     REQUIRE(Json::parse(invalid_move->body).at("error") == "invalid_move");
 }
+
+TEST_CASE("HTTP endpoints support local browser CORS") {
+    ApiFixture fixture;
+    httplib::Client client = fixture.client();
+
+    httplib::Headers preflight_headers = {
+        {"Origin", "http://localhost:5173"},
+        {"Access-Control-Request-Method", "POST"},
+        {"Access-Control-Request-Headers", "Content-Type"}
+    };
+    const auto preflight = client.Options(
+        "/api/puzzle/solve",
+        preflight_headers
+    );
+    REQUIRE(preflight);
+    REQUIRE(preflight->status == 204);
+    REQUIRE(preflight->get_header_value("Access-Control-Allow-Origin") == "http://localhost:5173");
+    REQUIRE(preflight->get_header_value("Access-Control-Allow-Methods") == "GET, POST, OPTIONS");
+    REQUIRE(preflight->get_header_value("Access-Control-Allow-Headers") == "Content-Type");
+
+    httplib::Headers request_headers = {
+        {"Origin", "http://localhost:5173"}
+    };
+    const auto response = client.Get(
+        "/api/puzzle/goal-types",
+        request_headers
+    );
+    REQUIRE(response);
+    REQUIRE(response->status == 200);
+    REQUIRE(response->get_header_value("Access-Control-Allow-Origin") == "http://localhost:5173");
+}
+
+TEST_CASE("HTTP endpoints do not authorize unrelated origins") {
+    ApiFixture fixture;
+    httplib::Client client = fixture.client();
+    const httplib::Headers headers = {
+        {"Origin", "https://untrusted.example"}
+    };
+
+    const auto response = client.Get("/api/puzzle/goal-types", headers);
+    REQUIRE(response);
+    REQUIRE(response->status == 200);
+    REQUIRE(response->get_header_value("Access-Control-Allow-Origin").empty());
+}
