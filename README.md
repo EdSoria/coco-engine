@@ -75,10 +75,10 @@ The server is available at `http://localhost:8080`.
 The complete public contract, request/response examples and JavaScript usage
 are in [docs/API.md](docs/API.md).
 
-The API accepts JSON requests and returns JSON responses. A browser frontend
-running on another port may need a development proxy or CORS support. The
-simplest local setup is to run both applications on the same computer and
-configure the frontend to use `http://localhost:8080`.
+The API accepts JSON requests and returns JSON responses. Local browser
+frontends served from `http://localhost` or opened directly as a local
+`file://` can call the API at `http://localhost:8080`; other origins may need
+a development proxy.
 
 ## Tests
 

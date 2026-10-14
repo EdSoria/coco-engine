@@ -302,6 +302,22 @@ TEST_CASE("HTTP endpoints support local browser CORS") {
     REQUIRE(response->get_header_value("Access-Control-Allow-Origin") == "http://localhost:5173");
 }
 
+TEST_CASE("HTTP endpoints support frontends opened from a local file") {
+    ApiFixture fixture;
+    httplib::Client client = fixture.client();
+    const httplib::Headers headers = {
+        {"Origin", "null"}
+    };
+
+    const auto response = client.Get(
+        "/api/puzzle/goal?size=3&type=ordered",
+        headers
+    );
+    REQUIRE(response);
+    REQUIRE(response->status == 200);
+    REQUIRE(response->get_header_value("Access-Control-Allow-Origin") == "null");
+}
+
 TEST_CASE("HTTP endpoints do not authorize unrelated origins") {
     ApiFixture fixture;
     httplib::Client client = fixture.client();

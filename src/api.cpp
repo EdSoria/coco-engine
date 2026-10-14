@@ -23,7 +23,8 @@ constexpr int minimum_size = 2;
 constexpr int maximum_size = 5;
 
 bool is_allowed_origin(const std::string& origin) {
-	return origin == "http://localhost" ||
+	return origin == "null" ||
+		origin == "http://localhost" ||
 		origin.rfind("http://localhost:", 0) == 0 ||
 		origin == "http://127.0.0.1" ||
 		origin.rfind("http://127.0.0.1:", 0) == 0;
