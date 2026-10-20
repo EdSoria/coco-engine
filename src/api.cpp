@@ -9,6 +9,8 @@
 #include <httplib.h>
 #include <nlohmann/json.hpp>
 
+#include <cstdint>
+#include <limits>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -76,10 +78,32 @@ int parse_size(const std::string& value) {
 	} catch (const std::exception&) {
 		throw std::invalid_argument("size must be an integer between 2 and 5");
 	}
+
 	if (parsed_length != value.size() || size < minimum_size || size > maximum_size) {
 		throw std::invalid_argument("size must be an integer between 2 and 5");
 	}
 	return size;
+}
+
+std::size_t parse_max_nodes(const Json& body) {
+	if (!body.contains("max_nodes")) {
+		return 250000;
+	}
+
+	const Json& value = body.at("max_nodes");
+	if (!value.is_number_integer() && !value.is_number_unsigned()) {
+		throw std::invalid_argument("max_nodes must be a non-negative integer");
+	}
+
+	if (value.is_number_integer() && value.get<std::int64_t>() < 0) {
+		throw std::invalid_argument("max_nodes must be a non-negative integer");
+	}
+
+	const std::uint64_t parsed = value.get<std::uint64_t>();
+	if (parsed > std::numeric_limits<std::size_t>::max()) {
+		throw std::invalid_argument("max_nodes is too large");
+	}
+	return static_cast<std::size_t>(parsed);
 }
 
 Move parse_move(const std::string& value) {
@@ -268,7 +292,7 @@ void register_routes(httplib::Server& server) {
 				throw std::invalid_argument("initial and goal must have matching sizes");
 			}
 
-			const SolveResult result = solve(initial, goal);
+			const SolveResult result = solve(initial, goal, parse_max_nodes(body));
 			if (result.status == SolveStatus::Unsolvable) {
 				set_json_response(response, Json{
 					{"solvable", false},
